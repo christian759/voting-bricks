@@ -10,14 +10,15 @@ import (
 
 // Candidate represents a candidate in the voting system.
 type Candidate struct {
-	name    string     // Name of the candidate
-	genesis [32]byte   // Genesis hash associated with the candidate
-	people  [][32]byte // List of hashes related to this candidate
+	name       string     // Name of the candidate
+	genesis    [32]byte   // Genesis hash associated with the candidate
+	people     [][32]byte // List of hashes related to this candidate
+	supporters []Voter
 }
 
 // Voter represents a voter in the system.
 type Voter struct {
-	previous_hashid string   // Previous hash ID as a string
+	previous_hashid [32]byte // Previous hash ID as a string
 	hashid          [32]byte // Current hash ID of the voter
 	name            string   // Name of the voter
 	choice          string   // Voter's choice of candidate
@@ -102,11 +103,11 @@ func main() {
 	name, choice := Questions()
 
 	// Initialize candidates with empty people slices
-	President1 := Candidate{name: "tinubu", people: make([][32]byte, 0)}
+	President1 := Candidate{name: "tinubu", people: make([][32]byte, 0), supporters: make([]Voter, 0)}
 	President1.genesisGenerator()
-	President2 := Candidate{name: "atiku", people: make([][32]byte, 0)}
+	President2 := Candidate{name: "atiku", people: make([][32]byte, 0), supporters: make([]Voter, 0)}
 	President2.genesisGenerator()
-	President3 := Candidate{name: "obi", people: make([][32]byte, 0)}
+	President3 := Candidate{name: "obi", people: make([][32]byte, 0), supporters: make([]Voter, 0)}
 	President3.genesisGenerator()
 
 	// Check if the user's choice matches any of the candidates
@@ -120,9 +121,15 @@ func main() {
 	if err != nil {
 		// Handle the case where the candidate's previous hash is not found
 		log.Fatal(err)
-	}
-
-	// Generate the hash based on user's name, choice, and previous hash
+		return
+	} // Generate the hash based on user's name, choice, and previous hash
 	newHash := HashGenerator(name, cand.name, prevhash)
-	fmt.Printf("Generated hash: %x\n", newHash) // Print the new hash in hexadecimal format
+	voter := Voter{name: name, choice: choice, hashid: newHash, previous_hashid: prevhash}
+	if voter.choice == President1.name {
+		President1.supporters = append(President1.supporters, voter)
+	} else if voter.choice == President2.name {
+		President2.supporters = append(President2.supporters, voter)
+	} else if voter.choice == President3.name {
+		President3.supporters = append(President3.supporters, voter)
+	}
 }
