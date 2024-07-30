@@ -25,24 +25,23 @@ func (v Voter) HashGenerator() [32]byte {
 	votingid := v.name + v.choice + v.previous_hashid
 	votinghash_id := sha256.Sum256([]byte(votingid))
 	return votinghash_id
-
 }
-func (v Voter) PreviousHash(cand1, cand2, cand3) {
-	if v.choice == cand1.name {
-		previoushash := cand1.people[len(cand1.people-1)]
+
+func PreviousHash(name string, cand1 Candidate, cand2 Candidate, cand3 Candidate) [32]byte {
+	if name == cand1.name {
+		previoushash := cand1.people[len(cand1.people)-1]
 		return previoushash
-	} else if v.choice == cand2.name {
-		previoushash := cand2.people[len(cand2.people-1)]
+	} else if name == cand2.name {
+		previoushash := cand2.people[len(cand2.people)-1]
 		return previoushash
-	} else if v.choice == cand3.name {
-		previoushash := cand3.people[len(cand3.people-1)]
+	} else if name == cand3.name {
+		previoushash := cand3.people[len(cand3.people)-1]
 		return previoushash
 	}
 }
 
 func (v *Voter) Voting(c Candidate) {
 	v.hashid = v.HashGenerator()
-
 }
 
 func Questions() (string, string) {
@@ -61,15 +60,26 @@ func Questions() (string, string) {
 	return name, choice
 }
 
+func (c *Candidate) genesisGenerator() [32]byte {
+	votingid := c.name + c.name
+	hash_id := sha256.Sum256([]byte(votingid))
+	c.genesis = hash_id
+}
+
 func main() {
 	name, choice := Questions()
+
 	President1 := Candidate{name: "tinubu", people: make([][32]byte, 0)}
+	President1.genesisGenerator()
 	President2 := Candidate{name: "atiku", people: make([][32]byte, 0)}
+	President2.genesisGenerator()
 	President3 := Candidate{name: "obi", people: make([][32]byte, 0)}
+	President3.genesisGenerator()
 
 	if choice != President1.name || choice != President2.name || choice != President3.name {
 		log.Fatal("GET OUT OF HERE, YOU DON'T EVEN KNOW THE NAME OF THE CANDIDATE AHHHH!!!!")
 		return
 	}
+	PreviousHash(name, President1, President2, President3)
 
 }
