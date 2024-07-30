@@ -1,3 +1,6 @@
+//
+//
+
 package main
 
 import (
@@ -27,17 +30,27 @@ func (v Voter) HashGenerator() [32]byte {
 	return votinghash_id
 }
 
-func PreviousHash(name string, cand1 Candidate, cand2 Candidate, cand3 Candidate) [32]byte {
+// PreviousHash function
+func PreviousHash(name string, cand1, cand2, cand3 Candidate) ([32]byte, error) {
+	var previousHash [32]byte // Default zero-value of [32]byte
+
 	if name == cand1.name {
-		previoushash := cand1.people[len(cand1.people)-1]
-		return previoushash
+		if len(cand1.people) > 0 {
+			previousHash = cand1.people[len(cand1.people)-1]
+			return previousHash, nil
+		}
 	} else if name == cand2.name {
-		previoushash := cand2.people[len(cand2.people)-1]
-		return previoushash
+		if len(cand2.people) > 0 {
+			previousHash = cand2.people[len(cand2.people)-1]
+			return previousHash, nil
+		}
 	} else if name == cand3.name {
-		previoushash := cand3.people[len(cand3.people)-1]
-		return previoushash
+		if len(cand3.people) > 0 {
+			previousHash = cand3.people[len(cand3.people)-1]
+			return previousHash, nil
+		}
 	}
+	return previousHash, nil
 }
 
 func (v *Voter) Voting(c Candidate) {
@@ -64,6 +77,7 @@ func (c *Candidate) genesisGenerator() [32]byte {
 	votingid := c.name + c.name
 	hash_id := sha256.Sum256([]byte(votingid))
 	c.genesis = hash_id
+	return hash_id
 }
 
 func main() {
