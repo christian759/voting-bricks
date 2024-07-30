@@ -103,10 +103,10 @@ func (c *Candidate) genesisGenerator() [32]byte {
 func Contains(slice []Voter, person Voter) bool {
 	for _, item := range slice {
 		if item == person {
-			return true
+			return false
 		}
 	}
-	return false
+	return true
 }
 
 func hashchecker(list [][32]byte, hash [32]byte) bool {
@@ -146,29 +146,28 @@ func main() {
 
 	//validation and adding voters to the supporter's list
 	if voter.choice == President1.name {
-		if Contains(President1.supporters, voter) || hashchecker(President1.people, voter.previous_hashid) {
-			fmt.Printf("This blockchain system has been compromised")
-			return
-		} else {
+		if Contains(President1.supporters, voter) && hashchecker(President1.people, voter.previous_hashid) {
 			President1.supporters = append(President1.supporters, voter)
 			President1.people = append(President1.people, voter.hashid)
+		} else {
+			fmt.Printf("This blockchain system has been compromised")
+			return
 		}
 	} else if voter.choice == President2.name {
-		if Contains(President2.supporters, voter) || hashchecker(President2.people, voter.previous_hashid) {
-			fmt.Printf("This blockchain system has been compromised")
-			return
-		} else {
+		if Contains(President2.supporters, voter) && hashchecker(President2.people, voter.previous_hashid) {
 			President2.supporters = append(President2.supporters, voter)
 			President2.people = append(President2.people, voter.hashid)
-		}
-	} else if voter.choice == President3.name {
-		if Contains(President3.supporters, voter) || hashchecker(President3.people, voter.previous_hashid) {
+		} else {
 			fmt.Printf("This blockchain system has been compromised")
 			return
-		} else {
+		}
+	} else if voter.choice == President3.name {
+		if Contains(President3.supporters, voter) && hashchecker(President3.people, voter.previous_hashid) {
 			President3.supporters = append(President3.supporters, voter)
 			President3.people = append(President3.people, voter.hashid)
+		} else {
+			fmt.Printf("This blockchain system has been compromised")
+			return
 		}
 	}
-
 }
