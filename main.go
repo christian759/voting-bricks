@@ -100,6 +100,22 @@ func (c *Candidate) genesisGenerator() [32]byte {
 	return hash_id
 }
 
+func Contains(slice []Voter, person Voter) bool {
+	for _, item := range slice {
+		if item == person {
+			return true
+		}
+	}
+	return false
+}
+
+func hashchecker(list [][32]byte, hash [32]byte) bool {
+	if hash == list[len(list)-1] {
+		return hash == list[len(list)-1]
+	}
+	return false
+}
+
 func main() {
 	// Get user input for name and choice
 	name, choice := Questions()
@@ -114,7 +130,7 @@ func main() {
 
 	// Check if the user's choice matches any of the candidates
 	if (choice != President1.name) && (choice != President2.name) && (choice != President3.name) {
-		log.Fatal("GET OUT OF HERE, YOU DON'T EVEN KNOW THE NAME OF THE CANDIDATE AHHHH!!!!")
+		log.Fatal("GET OUT OF HERE, YOU DON'T EVEN KNOW THE NAME OF THE CANDIDATES AHHHH!!!!")
 		return
 	}
 
@@ -128,16 +144,31 @@ func main() {
 	newHash := HashGenerator(name, cand.name, prevhash)
 	voter := Voter{name: name, choice: choice, hashid: newHash, previous_hashid: prevhash}
 
-	//adding voters to the supporter's list
+	//validation and adding voters to the supporter's list
 	if voter.choice == President1.name {
-		President1.supporters = append(President1.supporters, voter)
-		President1.people = append(President1.people, voter.hashid)
+		if Contains(President1.supporters, voter) || hashchecker(President1.people, voter.previous_hashid) {
+			fmt.Printf("This blockchain system has been compromised")
+			return
+		} else {
+			President1.supporters = append(President1.supporters, voter)
+			President1.people = append(President1.people, voter.hashid)
+		}
 	} else if voter.choice == President2.name {
-		President2.supporters = append(President2.supporters, voter)
-		President2.people = append(President2.people, voter.hashid)
+		if Contains(President2.supporters, voter) || hashchecker(President2.people, voter.previous_hashid) {
+			fmt.Printf("This blockchain system has been compromised")
+			return
+		} else {
+			President2.supporters = append(President2.supporters, voter)
+			President2.people = append(President2.people, voter.hashid)
+		}
 	} else if voter.choice == President3.name {
-		President3.supporters = append(President3.supporters, voter)
-		President3.people = append(President3.people, voter.hashid)
+		if Contains(President3.supporters, voter) || hashchecker(President3.people, voter.previous_hashid) {
+			fmt.Printf("This blockchain system has been compromised")
+			return
+		} else {
+			President3.supporters = append(President3.supporters, voter)
+			President3.people = append(President3.people, voter.hashid)
+		}
 	}
-	println("got here")
+
 }
