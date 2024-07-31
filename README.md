@@ -1,6 +1,6 @@
 **Blockchain-Based Voting System**
 
--This repository contains a Go-based implementation of a simple blockchain voting system. The system allows voters to vote for one of three presidential candidates using a SHA-256 hash to ensure the integrity of the voting process.
+- This repository contains a Go-based implementation of a simple blockchain voting system. The system allows voters to vote for one of three presidential candidates using a SHA-256 hash to ensure the integrity of the voting process.
 
 **Table of Contents**
 - Overview
@@ -31,7 +31,7 @@
 - cd blockchain-voting-system
 
 *Build the project:*
--go build
+- go build
 
 *Run the application:*
 - ./blockchain-voting-system
