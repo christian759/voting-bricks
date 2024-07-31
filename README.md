@@ -8,10 +8,8 @@
 - Requirements
 - Installation
 - Usage
-- Code Structure
-- License
-- Overview
 
+**Overview**
 - This application simulates a voting process where voters can cast their votes for three presidential candidates: Tinubu, Atiku, and Obi. Each vote is secured using SHA-256 hashing, ensuring that the voting process is tamper-proof and verifiable.
 
 **Features**
