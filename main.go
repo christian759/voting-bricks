@@ -12,7 +12,7 @@ type Candidate struct {
 	name       string     // Name of the candidate
 	genesis    [32]byte   // Genesis hash associated with the candidate
 	people     [][32]byte // List of hashes related to this candidate
-	supporters []Voter
+	supporters []string   // list of the candidate supporters
 }
 
 // Voter represents a voter in the system.
@@ -100,7 +100,7 @@ func (c *Candidate) genesisGenerator() [32]byte {
 	return hash_id
 }
 
-func Contains(slice []Voter, person Voter) bool {
+func Contains(slice []string, person string) bool {
 	for _, item := range slice {
 		if item == person {
 			return false
@@ -117,57 +117,80 @@ func hashchecker(list [][32]byte, hash [32]byte) bool {
 }
 
 func main() {
-	// Get user input for name and choice
-	name, choice := Questions()
 
 	// Initialize candidates with empty people slices
-	President1 := Candidate{name: "tinubu", people: make([][32]byte, 0), supporters: make([]Voter, 0)}
+	President1 := Candidate{name: "tinubu", people: make([][32]byte, 0), supporters: make([]string, 0)}
 	President1.genesisGenerator()
-	President2 := Candidate{name: "atiku", people: make([][32]byte, 0), supporters: make([]Voter, 0)}
+	President2 := Candidate{name: "atiku", people: make([][32]byte, 0), supporters: make([]string, 0)}
 	President2.genesisGenerator()
-	President3 := Candidate{name: "obi", people: make([][32]byte, 0), supporters: make([]Voter, 0)}
+	President3 := Candidate{name: "obi", people: make([][32]byte, 0), supporters: make([]string, 0)}
 	President3.genesisGenerator()
 
-	// Check if the user's choice matches any of the candidates
-	if (choice != President1.name) && (choice != President2.name) && (choice != President3.name) {
-		log.Fatal("GET OUT OF HERE, YOU DON'T EVEN KNOW THE NAME OF THE CANDIDATES AHHHH!!!!")
-		return
+	// using a for loop to take votes and determine who wins the election
+	i := 20
+	for i > 0 {
+		// Get user input for name and choice
+		name, choice := Questions()
+
+		// Check if the user's choice matches any of the candidates
+		if (choice != President1.name) && (choice != President2.name) && (choice != President3.name) {
+			log.Fatal("GET OUT OF HERE, YOU DON'T EVEN KNOW THE NAME OF THE CANDIDATES AHHHH!!!!")
+			return
+		}
+
+		// Retrieve the previous hash based on the user's name and chosen candidate
+		prevhash, cand, err := PreviousHash(choice, President1, President2, President3)
+		if err != nil {
+			// Handle the case where the candidate's previous hash is not found
+			log.Fatal(err)
+			return
+		} // Generate the hash based on user's name, choice, and previous hash
+		newHash := HashGenerator(name, cand.name, prevhash)
+		voter := Voter{name: name, choice: choice, hashid: newHash, previous_hashid: prevhash}
+
+		//validation and adding voters to the supporter's list
+		if voter.choice == President1.name {
+			if Contains(President1.supporters, voter.name) && hashchecker(President1.people, voter.previous_hashid) {
+				President1.supporters = append(President1.supporters, voter.name)
+				President1.people = append(President1.people, voter.hashid)
+			} else {
+				fmt.Printf("This blockchain system has been compromised")
+				return
+			}
+		} else if voter.choice == President2.name {
+			if Contains(President2.supporters, voter.name) && hashchecker(President2.people, voter.previous_hashid) {
+				President2.supporters = append(President2.supporters, voter.name)
+				President2.people = append(President2.people, voter.hashid)
+			} else {
+				fmt.Printf("This blockchain system has been compromised")
+				return
+			}
+		} else if voter.choice == President3.name {
+			if Contains(President3.supporters, voter.name) && hashchecker(President3.people, voter.previous_hashid) {
+				President3.supporters = append(President3.supporters, voter.name)
+				President3.people = append(President3.people, voter.hashid)
+			} else {
+				fmt.Printf("This blockchain system has been compromised")
+				return
+			}
+		}
+
+		i--
 	}
 
-	// Retrieve the previous hash based on the user's name and chosen candidate
-	prevhash, cand, err := PreviousHash(choice, President1, President2, President3)
-	if err != nil {
-		// Handle the case where the candidate's previous hash is not found
-		log.Fatal(err)
-		return
-	} // Generate the hash based on user's name, choice, and previous hash
-	newHash := HashGenerator(name, cand.name, prevhash)
-	voter := Voter{name: name, choice: choice, hashid: newHash, previous_hashid: prevhash}
+	// finding the winner and th election i.e the candidate with the most supporters
+	maxSupporters := float64(len(President1.people))
+	winner := President1.name
 
-	//validation and adding voters to the supporter's list
-	if voter.choice == President1.name {
-		if Contains(President1.supporters, voter) && hashchecker(President1.people, voter.previous_hashid) {
-			President1.supporters = append(President1.supporters, voter)
-			President1.people = append(President1.people, voter.hashid)
-		} else {
-			fmt.Printf("This blockchain system has been compromised")
-			return
-		}
-	} else if voter.choice == President2.name {
-		if Contains(President2.supporters, voter) && hashchecker(President2.people, voter.previous_hashid) {
-			President2.supporters = append(President2.supporters, voter)
-			President2.people = append(President2.people, voter.hashid)
-		} else {
-			fmt.Printf("This blockchain system has been compromised")
-			return
-		}
-	} else if voter.choice == President3.name {
-		if Contains(President3.supporters, voter) && hashchecker(President3.people, voter.previous_hashid) {
-			President3.supporters = append(President3.supporters, voter)
-			President3.people = append(President3.people, voter.hashid)
-		} else {
-			fmt.Printf("This blockchain system has been compromised")
-			return
-		}
+	if float64(len(President2.people)) > maxSupporters {
+		maxSupporters = float64(len(President2.people))
+		winner = President2.name
 	}
+	if float64(len(President3.people)) > maxSupporters {
+		maxSupporters = float64(len(President3.people))
+		winner = President3.name
+	}
+
+	fmt.Printf("The candidate with the most supporters is %s with %d supporters.\n", winner, int(maxSupporters))
+
 }
