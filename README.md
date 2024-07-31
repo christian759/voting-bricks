@@ -3,9 +3,9 @@
 -This repository contains a Go-based implementation of a simple blockchain voting system. The system allows voters to vote for one of three presidential candidates using a SHA-256 hash to ensure the integrity of the voting process.
 
 **Table of Contents**
--Overview
--Features
--Requirements
+*Overview
+*Features
+*Requirements
 -Installation
 -Usage
 -Code Structure
