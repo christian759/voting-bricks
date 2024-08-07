@@ -26,13 +26,14 @@
 
 *Installation--Clone the repository:*
 - git clone https://github.com/christian759/voting-bricks.git
-- cd blockchain-voting-system
+- cd voting-bricks
 
 *Build the project:*
 - go build
+- go install
 
 *Run the application:*
-- ./blockchain-voting-system
+- ./voting-bricks
 - Follow the prompts to enter your name and vote for a candidate.
 - Repeat the voting process until all votes are cast.
 - The program will display the candidate with the most supporters.
