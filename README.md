@@ -21,13 +21,14 @@
 - Validation: Checks to ensure voters vote only once and validate hash chains.
 - Winner Determination: Calculates and displays the candidate with the most votes.
 
-*Requirements*
+**Requirements**
 - Go 1.16 or higher
 
-*Installation--Clone the repository:*
+**Installation--Clone the repository:**
 - git clone https://github.com/christian759/voting-bricks.git
 - cd voting-bricks
 
+**Usage**
 *Build the project:*
 - go build
 - go install
