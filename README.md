@@ -29,6 +29,7 @@
 - cd voting-bricks
 
 **Usage**
+
 *Build the project:*
 - go build
 - go install
