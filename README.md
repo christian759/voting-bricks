@@ -25,7 +25,7 @@
 - Go 1.16 or higher
 
 *Installation--Clone the repository:*
-- git clone https://github.com/christian759/blockchain-voting-system.git
+- git clone https://github.com/christian759/voting-bricks.git
 - cd blockchain-voting-system
 
 *Build the project:*
