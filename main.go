@@ -154,7 +154,7 @@ func main() {
 				President1.supporters = append(President1.supporters, voter.name)
 				President1.people = append(President1.people, voter.hashid)
 			} else {
-				fmt.Printf("This blockchain system has been compromised")
+				log.Fatal("This blockchain system has been compromised")
 				return
 			}
 		} else if voter.choice == President2.name {
@@ -162,7 +162,7 @@ func main() {
 				President2.supporters = append(President2.supporters, voter.name)
 				President2.people = append(President2.people, voter.hashid)
 			} else {
-				fmt.Printf("This blockchain system has been compromised")
+				log.Fatal("This blockchain system has been compromised")
 				return
 			}
 		} else if voter.choice == President3.name {
@@ -170,7 +170,7 @@ func main() {
 				President3.supporters = append(President3.supporters, voter.name)
 				President3.people = append(President3.people, voter.hashid)
 			} else {
-				fmt.Printf("This blockchain system has been compromised")
+				log.Fatal("This blockchain system has been compromised")
 				return
 			}
 		}
